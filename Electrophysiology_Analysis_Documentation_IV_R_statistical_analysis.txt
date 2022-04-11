@@ -1,0 +1,338 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.70 (7543) x86_64-apple-darwin15.6.0]
+
+[Workspace restored from /Users/roberteugenedelcarlo/.RData]
+[History restored from /Users/roberteugenedelcarlo/.Rapp.history]
+
+> getwd()
+[1] "/Users/roberteugenedelcarlo/Desktop/IV_SSA_fSSI"
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> library(FSA)
+## FSA v0.8.30. See citation('FSA') if used in publication.
+## Run fishR() for related website and fishR('IFAR') for related book.
+Warning message:
+package ‘FSA’ was built under R version 3.5.2 
+> library(dunn.test)
+> IV <- read.csv("IV_report.csv", header = TRUE)
+> str(IV)
+'data.frame':	77 obs. of  10 variables:
+ $ Genotype                  : Factor w/ 3 levels "EPN","LVNV","WT": 3 3 3 3 3 3 3 3 3 3 ...
+ $ I_max_pA                  : num  -7092 -1009 -3050 -3896 -3554 ...
+ $ I_density_max_pA_pF       : num  -1110 -318 -238 -605 -858 ...
+ $ V_at_I_max_mV             : int  10 0 10 0 10 10 10 -10 0 10 ...
+ $ G_max_V.Eeq_pA.mV         : num  -122.3 -14.8 -52.6 -57.3 -61.3 ...
+ $ G_max_V.Erev_pA.mV        : num  -96.5 -12.5 -51.8 -58.3 -67.7 ...
+ $ Erev_mV                   : num  83.5 80.8 68.9 66.8 62.5 ...
+ $ GpApF_max_V.Eeq_pA.mV     : num  -19.13 -4.67 -4.1 -8.9 -14.8 ...
+ $ GpApF_max_V.Erev_pA.mV    : num  -15.1 -3.93 -4.04 -9.06 -16.34 ...
+ $ G_Na_by_linear_slope_pA.mV: num  14.3 12.6 17.5 16.4 21.2 ...
+> dim(IV)
+[1] 77 10
+> table(IV$Genotype)
+
+ EPN LVNV   WT 
+  14   18   45 
+> I_max_kruskal <- kruskal.test(IV$I_max_pA ~ IV$Genotype, data=IV)
+> I_max_dunn <- dunnTest(IV$I_max_pA ~ IV$Genotype, data=IV)
+> I_max_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$I_max_pA by IV$Genotype
+Kruskal-Wallis chi-squared = 20.895, df = 2, p-value = 2.902e-05
+
+> I_max_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.150828 2.498029e-01 2.498029e-01
+2   EPN - WT  2.589037 9.624486e-03 1.924897e-02
+3  LVNV - WT  4.311441 1.621939e-05 4.865816e-05
+> I_density_kruskal <- kruskal.test(IV$I_density_max_pA_pF ~ IV$Genotype, data = IV)
+> I_density_dunn <- dunnTest(IV$I_density_max_pA_pF ~ IV$Genotype, data = IV)
+> I_density_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$I_density_max_pA_pF by IV$Genotype
+Kruskal-Wallis chi-squared = 19.81, df = 2, p-value = 4.993e-05
+
+> I_density_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.294184 1.956019e-01 1.956019e-01
+2   EPN - WT  2.370173 1.777977e-02 3.555953e-02
+3  LVNV - WT  4.254454 2.095597e-05 6.286792e-05
+> V_max_kruskal <- kruskal.test(IV$V_at_I_max_mV ~ IV$Genotype, data = IV)
+> V_max_dunn <- dunnTest(IV$V_at_I_max_mV ~ IV$Genotype, data = IV)
+> V_max_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$V_at_I_max_mV by IV$Genotype
+Kruskal-Wallis chi-squared = 3.9776, df = 2, p-value = 0.1369
+
+> V_max_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z    P.unadj     P.adj
+1 EPN - LVNV -0.294674 0.76824294 0.7682429
+2   EPN - WT  1.297462 0.19447217 0.3889443
+3  LVNV - WT  1.800234 0.07182363 0.2154709
+> G_max_Eeq_kruskal <- kruskal.test(IV$G_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> G_max_Eeq_dunn <- dunnTest(IV$G_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> G_max_Eeq_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$G_max_V.Eeq_pA.mV by IV$Genotype
+Kruskal-Wallis chi-squared = 19.94, df = 2, p-value = 4.677e-05
+
+> G_max_Eeq_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.276265 0.2018620025 0.2018620025
+2   EPN - WT  2.397531 0.0165059879 0.0330119757
+3  LVNV - WT  4.261577 0.0000202989 0.0000608967
+> G_max_Erev_kruskal <- kruskal.test(IV$G_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> G_max_Erev_dunn <- dunnTest(IV$G_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> G_max_Erev_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$G_max_V.Erev_pA.mV by IV$Genotype
+Kruskal-Wallis chi-squared = 19.811, df = 2, p-value = 4.991e-05
+
+> G_max_Erev_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.187663 2.349663e-01 0.2349663013
+2   EPN - WT  2.463375 1.376357e-02 0.0275271375
+3  LVNV - WT  4.220618 2.436337e-05 0.0000730901
+> Erev_kruskal <- kruskal.test(IV$Erev_mV ~ IV$Genotype, data = IV)
+> Erev_dunn <- dunnTest(IV$Erev_mV ~ IV$Genotype, data = IV)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> Erev_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$Erev_mV by IV$Genotype
+Kruskal-Wallis chi-squared = 2.1027, df = 2, p-value = 0.3495
+
+> Erev_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison          Z   P.unadj     P.adj
+1 EPN - LVNV  1.4462466 0.1481080 0.4443241
+2   EPN - WT  1.0244053 0.3056439 0.6112878
+3  LVNV - WT -0.7185035 0.4724469 0.4724469
+> GpApF_max_Eeq_kruskal <- kruskal.test(IV$GpApF_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> GpApF_max_Eeq_dunn <- dunnTest(IV$GpApF_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> GpApF_max_Eeq_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$GpApF_max_V.Eeq_pA.mV by IV$Genotype
+Kruskal-Wallis chi-squared = 18.718, df = 2, p-value = 8.62e-05
+
+> GpApF_max_Eeq_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.274274 2.025665e-01 0.2025664908
+2   EPN - WT  2.289490 2.205089e-02 0.0441017770
+3  LVNV - WT  4.140480 3.465805e-05 0.0001039742
+> GpApF_max_Erev_kruskal <- kruskal.test(IV$GpApF_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> GpApF_max_Erev_dunn <- dunnTest(IV$GpApF_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> GpApF_max_Erev_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$GpApF_max_V.Erev_pA.mV by IV$Genotype
+Kruskal-Wallis chi-squared = 18.024, df = 2, p-value = 0.0001219
+
+> GpApF_max_Erev_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z      P.unadj        P.adj
+1 EPN - LVNV -1.332014 1.828556e-01 0.1828555688
+2   EPN - WT  2.173567 2.973770e-02 0.0594753958
+3  LVNV - WT  4.087054 4.368855e-05 0.0001310656
+> G_Na_macroscopic_kruskal <- kruskal.test(IV$G_Na_by_linear_slope_pA.mV ~ IV$Genotype, data = IV)
+> G_Na_macroscopic_dunn <- dunnTest(IV$G_Na_by_linear_slope_pA.mV ~ IV$Genotype, data = IV)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> G_Na_macroscopic_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  IV$G_Na_by_linear_slope_pA.mV by IV$Genotype
+Kruskal-Wallis chi-squared = 1.3142, df = 2, p-value = 0.5184
+
+> G_Na_macroscopic_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison          Z   P.unadj     P.adj
+1 EPN - LVNV -0.7039610 0.4814570 0.9629141
+2   EPN - WT  0.2251967 0.8218263 0.8218263
+3  LVNV - WT  1.1435568 0.2528075 0.7584225
+> #Dataset
+> IV
+   Genotype   I_max_pA I_density_max_pA_pF V_at_I_max_mV G_max_V.Eeq_pA.mV G_max_V.Erev_pA.mV   Erev_mV GpApF_max_V.Eeq_pA.mV GpApF_max_V.Erev_pA.mV G_Na_by_linear_slope_pA.mV
+1        WT -7092.2485         -1109.58540            10       -122.280147         -96.536215  83.46723           -19.1307827            -15.1031332                   14.26566
+2        WT -1008.7758          -317.52328             0        -14.834938         -12.491131  80.75936            -4.6694600             -3.9317212                   12.55390
+3        WT -3050.2351          -237.98710            10        -52.590260         -51.761193  68.92900            -4.1032259             -4.0385400                   17.47831
+4        WT -3896.0374          -605.03446             0        -57.294667         -58.310753  66.81508            -8.8975656             -9.0553585                   16.40986
+5        WT -3554.1753          -858.17417            10        -61.278884         -67.660668  62.52941           -14.7961063            -16.3370214                   21.19650
+6        WT -2015.2072          -299.30117            10        -34.744951         -31.987416  73.11067            -5.1603650             -4.7424810                   38.25547
+7        WT -2016.9824          -330.55804            10        -34.775559         -25.478165  89.16514            -5.6992765             -4.1755506                   13.62928
+8        WT -1983.2209          -376.46578           -10        -25.425910         -23.501251  74.38789            -4.8264843             -4.4611352                   12.70437
+9        WT -1923.5050          -990.12321             0        -28.286838         -30.226745  63.63586           -14.5606354            -15.5592014                   17.10743
+10       WT -3719.7826          -511.91713            10        -64.134183         -50.876875  83.11342            -8.8261575             -7.0016845                   14.02004
+11       WT -1056.1161          -107.62002            10        -18.208898         -18.634961  66.67391            -1.8555176             -1.8989341                   17.65290
+12       WT -2639.6238          -442.63429             0        -38.817997         -33.396201  79.03964            -6.5093278             -5.6001555                   13.24616
+13       WT -1585.7062          -183.91454           -10        -20.329566         -20.052589  69.07738            -2.3578787             -2.3257541                   15.68756
+14       WT -1442.5521          -206.71655             0        -21.214002         -22.364360  64.50228            -3.0399493             -3.2047947                   17.01256
+15       WT -1621.3936          -272.77933            10        -27.955061         -28.349773  67.19247            -4.7030919             -4.7694972                   19.34080
+16       WT -1498.8773          -159.84642            10        -25.842712         -24.981944  69.99843            -2.7559727             -2.6641768                   17.80937
+17       WT -1249.8850          -216.77183            20        -26.039271         -25.337684  69.32909            -4.5160797             -4.3944011                   17.89332
+18       WT -1033.1877          -208.99881             0        -15.193937         -15.918962  64.90296            -3.0735119             -3.2201737                   16.88073
+19       WT  -880.7457          -138.29073             0        -12.952143         -13.042406  67.52939            -2.0336873             -2.0478600                   15.09399
+20       WT -1022.7136          -243.42820             0        -15.039905         -15.220378  67.19370            -3.5798264             -3.6227829                   15.92465
+21       WT  -829.6817          -427.17699            10        -14.304857         -14.072389  68.95813            -7.3651204             -7.2454300                   17.97902
+22       WT  -834.7015          -146.65761            10        -14.391405         -15.532352  63.73954            -2.5285795             -2.7290448                   16.58952
+23       WT  -807.7922          -229.01162             0        -11.879297         -11.526871  70.07905            -3.3678179             -3.2679041                   16.70765
+24       WT  -851.7456          -254.44805            10        -14.685269         -14.806154  67.52646            -4.3870354             -4.4231484                   17.26100
+25       WT  -668.9266          -347.47363            10        -11.533217         -11.353188  68.91971            -5.9909246             -5.8974090                   18.31504
+26       WT  -667.2330          -340.70636            10        -11.504017         -11.768284  66.69756            -5.8742475             -6.0091892                   18.80876
+27       WT  -724.8986           -57.12905             0        -10.660274         -10.543629  68.75229            -0.8401331             -0.8309404                   16.84749
+28       WT -1578.1072          -360.21661             0        -23.207459         -20.536801  76.84289            -5.2973030             -4.6877023                   13.69014
+29       WT  -658.7710           -96.49035            20        -13.724396         -11.883236  75.43700            -2.0102156             -1.7405404                   17.25528
+30       WT  -658.9218          -274.88177            20        -13.727538         -15.816197  61.66120            -5.7267035             -6.5980274                   22.66848
+31       WT  -623.0012          -159.72062            10        -10.741400         -10.453228  69.59893            -2.7538038             -2.6799241                   18.36768
+32       WT  -582.7241          -143.08135            10        -10.046968          -9.912918  68.78432            -2.4669199             -2.4340055                   17.66352
+33       WT  -643.3232           -85.38306            10        -11.091779         -11.042976  68.25633            -1.4721217             -1.4656444                   18.18027
+34       WT  -488.2360          -109.95016            10         -8.417862          -8.548256  67.11528            -1.8956924             -1.9250569                   17.46552
+35       WT  -511.0005          -204.12162            10         -8.810353          -8.159830  72.62391            -3.5193382             -3.2594836                   16.74959
+36       WT  -465.7685           -80.00502             0         -6.849537          -6.431813  72.41637            -1.1765444             -1.1047919                   15.67999
+37       WT  -380.4805           -70.30211            10         -6.560008          -6.429771  69.17481            -1.2121054             -1.1880412                   18.33107
+38       WT  -351.6071          -112.30340            10         -6.062192          -5.718842  71.48222            -1.9362655             -1.8265995                   17.54701
+39       WT  -540.7173          -251.13674            20        -11.264943                 NA        NA            -5.2320154             12.5568369                         NA
+40       WT  -287.2873           -61.34838            10         -4.953229          -5.344489  63.75393            -1.0577307             -1.1412817                   19.64010
+41       WT  -199.5859           -43.67677            10         -3.441136          -3.813300  62.33942            -0.7530478             -0.8344910                   20.25282
+42       WT  -181.7495           -33.18325            10         -3.133612          -2.955169  71.50223            -0.5721250             -0.5395455                   17.58245
+43       WT  -205.6495           -32.76086            10         -3.545681          -3.376410  70.90773            -0.5648424             -0.5378769                   16.90662
+44       WT  -262.1753           -36.15829            10         -4.520264          -4.475790  68.57632            -0.6234188             -0.6172852                   18.40602
+45       WT  -710.6221          -135.55039            10        -12.252106         -11.968114  69.37628            -2.3370758             -2.2829046                   16.94716
+46      EPN -1259.1644          -292.27340            10        -21.709732         -20.692166  70.85223            -5.0391965             -4.8030022                   18.63210
+47      EPN -1878.3090          -317.72999             0        -27.622191         -24.592219  76.37818            -4.6724998             -4.1599576                   15.36593
+48      EPN -1228.7164          -192.92059             0        -18.069359         -17.730231  69.30064            -2.8370676             -2.7838212                   16.42138
+49      EPN  -719.7161          -360.61454            10        -12.408898         -10.408093  79.14966            -6.2174921             -5.2149869                   16.22188
+50      EPN  -701.4744          -139.86955            10        -12.094387         -10.692146  75.60652            -2.4115440             -2.1319460                   16.81172
+51      EPN  -238.6488           -84.63518            10         -4.114635          -3.915911  70.94338            -1.4592272             -1.3887510                   18.32215
+52      EPN  -425.6969           -62.46590            10         -7.339602          -7.523113  66.58521            -1.0769982             -1.1039262                   17.00893
+53      EPN  -444.2024           -84.27642            10         -7.658662          -8.394092  62.91846            -1.4530418             -1.5925714                   19.95817
+54      EPN  -405.8361          -102.57064            10         -6.997174          -5.726750  80.86673            -1.7684593             -1.4473736                   14.32485
+55      EPN  -245.0561           -44.00147            20         -5.105336          -5.347589  65.82554            -0.9166974             -0.9601955                   20.42930
+56      EPN  -636.0645          -132.70579            20        -13.251344         -10.700860  79.44051            -2.7647039             -2.2325818                   15.72570
+57      EPN  -134.9506           -27.26006            10         -2.326735          -2.341191  67.64188            -0.4700011             -0.4729211                   17.44155
+58      EPN  -163.6160           -15.05045            10         -2.820965          -2.824074  67.93615            -0.2594906             -0.2597766                   18.85247
+59      EPN  -166.6717           -22.31818            10         -2.873651          -2.709139  71.52203            -0.3847962             -0.3627673                   17.47928
+60     LVNV -1253.5961           -62.84908            10        -21.613726         -20.912934  69.94358            -1.0836047             -1.0484705                   18.31925
+61     LVNV  -562.9126           -87.64957            10         -9.705390          -9.876290  66.99636            -1.5111995             -1.5378099                   17.55528
+62     LVNV  -430.2816          -116.55406            20         -8.964200          -7.645896  76.27615            -2.4282096             -2.0711094                   15.54599
+63     LVNV  -524.8558          -133.39081             0         -7.718467          -3.006675  62.21666            -1.9616295             -0.7641391                   17.68878
+64     LVNV  -445.9177          -123.05882            10         -7.688237          -9.077737  59.12213            -2.1217038             -2.5051608                   22.52471
+65     LVNV  -465.9185          -101.87428            10         -8.033077          -9.174455  60.78432            -1.7564531             -2.0060184                   20.20288
+66     LVNV  -767.7427          -127.31146             0        -11.290334         -12.186953  62.99710            -1.8722273             -2.0209099                   18.42518
+67     LVNV  -344.9389           -52.63830            10         -5.947222          -5.818730  69.28078            -0.9075569             -0.8879488                   18.46567
+68     LVNV  -299.9944           -79.40703            10         -5.172318          -4.180258  81.76458            -1.3690867             -1.1064933                   15.26656
+69     LVNV  -284.0145           -13.29625            10         -4.896802          -4.923384  67.68686            -0.2292457             -0.2304901                   17.07398
+70     LVNV  -308.2776           -59.76836            20         -6.422450          -5.476124  76.29485            -1.2451741             -1.0617019                   17.26579
+71     LVNV  -324.9600           -42.65169            10         -5.602759          -5.129415  73.35226            -0.7353739             -0.6732465                   15.68842
+72     LVNV  -258.5307           -85.88506            10         -4.457426          -5.074945  60.94256            -1.4807769             -1.6859196                   19.62995
+73     LVNV  -124.7262           -27.32034            10         -2.150452          -2.617723  57.64683            -0.4710403             -0.5733926                   22.02704
+74     LVNV  -159.9383           -60.04582            10         -2.757558          -3.509221  55.57660            -1.0352727             -1.3174703                   24.60049
+75     LVNV  -106.2161           -24.42020            10         -1.831312          -1.768096  70.07371            -0.4210379             -0.4065039                   16.98147
+76     LVNV  -197.9256           -44.73862            30         -5.208568          -2.333033 114.83618            -1.1773320             -0.5273530                   10.63674
+77     LVNV  -144.7057           -91.64725            10         -2.494926          -2.224893  75.03941            -1.5801249             -1.4091033                   16.69766
+> #Commands
+> #getwd()
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> #library(FSA)
+> #library(dunn.test)
+> #IV <- read.csv("IV_report.csv", header = TRUE)
+> #str(IV)
+> #dim(IV)
+> #table(IV$Genotype)
+> #I_max_kruskal <- kruskal.test(IV$I_max_pA ~ IV$Genotype, data=IV)
+> #I_max_dunn <- dunnTest(IV$I_max_pA ~ IV$Genotype, data=IV)
+> #I_max_kruskal
+> #I_max_dunn
+> #I_density_kruskal <- kruskal.test(IV$I_density_max_pA_pF ~ IV$Genotype, data = IV)
+> #I_density_dunn <- dunnTest(IV$I_density_max_pA_pF ~ IV$Genotype, data = IV)
+> #I_density_kruskal
+> #I_density_dunn
+> #V_max_kruskal <- kruskal.test(IV$V_at_I_max_mV ~ IV$Genotype, data = IV)
+> #V_max_dunn <- dunnTest(IV$V_at_I_max_mV ~ IV$Genotype, data = IV)
+> #V_max_kruskal
+> #V_max_dunn
+> #G_max_Eeq_kruskal <- kruskal.test(IV$G_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> #G_max_Eeq_dunn <- dunnTest(IV$G_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> #G_max_Eeq_kruskal
+> #G_max_Eeq_dunn
+> #G_max_Erev_kruskal <- kruskal.test(IV$G_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> #G_max_Erev_dunn <- dunnTest(IV$G_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> #G_max_Erev_kruskal
+> #G_max_Erev_dunn
+> #Erev_kruskal <- kruskal.test(IV$Erev_mV ~ IV$Genotype, data = IV)
+> #Erev_dunn <- dunnTest(IV$Erev_mV ~ IV$Genotype, data = IV)
+> #Erev_kruskal
+> #Erev_dunn
+> #GpApF_max_Eeq_kruskal <- kruskal.test(IV$GpApF_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> #GpApF_max_Eeq_dunn <- dunnTest(IV$GpApF_max_V.Eeq_pA.mV ~ IV$Genotype, data = IV)
+> #GpApF_max_Eeq_kruskal
+> #GpApF_max_Eeq_dunn
+> #GpApF_max_Erev_kruskal <- kruskal.test(IV$GpApF_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> #GpApF_max_Erev_dunn <- dunnTest(IV$GpApF_max_V.Erev_pA.mV ~ IV$Genotype, data = IV)
+> #GpApF_max_Erev_kruskal
+> #GpApF_max_Erev_dunn
+> #G_Na_macroscopic_kruskal <- kruskal.test(IV$G_Na_by_linear_slope_pA.mV ~ IV$Genotype, data = IV)
+> #G_Na_macroscopic_dunn <- dunnTest(IV$G_Na_by_linear_slope_pA.mV ~ IV$Genotype, data = IV)
+> #G_Na_macroscopic_kruskal
+> #G_Na_macroscopic_dunn

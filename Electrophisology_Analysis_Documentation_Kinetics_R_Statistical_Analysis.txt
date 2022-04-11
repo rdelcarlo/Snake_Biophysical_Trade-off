@@ -1,0 +1,249 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.70 (7543) x86_64-apple-darwin15.6.0]
+
+[Workspace restored from /Users/roberteugenedelcarlo/.RData]
+[History restored from /Users/roberteugenedelcarlo/.Rapp.history]
+
+> getwd()
+[1] "/Users/roberteugenedelcarlo/Desktop/IV_SSA_fSSI"
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> library(FSA)
+## FSA v0.8.30. See citation('FSA') if used in publication.
+## Run fishR() for related website and fishR('IFAR') for related book.
+Warning message:
+package ‘FSA’ was built under R version 3.5.2 
+> library(dunn.test)
+> Kinetics <- read.csv("Kinetics.csv", header = TRUE)
+> str(Kinetics)
+'data.frame':	94 obs. of  5 variables:
+ $ Genotype : Factor w/ 3 levels "EPN","LVNV","WT": 3 3 3 3 3 3 3 3 3 3 ...
+ $ V_act_Eeq: num  -6.93 -18.89 -12.69 -13.66 -8.51 ...
+ $ k_act_Eeq: num  9.33 8.64 7.17 5.9 9.44 ...
+ $ V_inact  : num  -61.8 NA -55.9 -56.2 -56.9 ...
+ $ k_inact  : num  10.55 NA 5.72 5.53 5.3 ...
+> dim(Kinetics)
+[1] 94  5
+> table(Kinetics$Genotype)
+
+ EPN LVNV   WT 
+  18   21   55 
+> Vact_kruskal <- kruskal.test(Kinetics$V_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+> Vact_dunn <- dunnTest(Kinetics$V_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> Vact_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Kinetics$V_act_Eeq by Kinetics$Genotype
+Kruskal-Wallis chi-squared = 2.6801, df = 2, p-value = 0.2618
+
+> Vact_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison        Z   P.unadj     P.adj
+1 EPN - LVNV 0.250384 0.8022904 0.8022904
+2   EPN - WT 1.382631 0.1667779 0.5003337
+3  LVNV - WT 1.196860 0.2313609 0.4627219
+> kact_kruskal <- kruskal.test(Kinetics$k_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+> kact_dunn <- dunnTest(Kinetics$k_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> kact_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Kinetics$k_act_Eeq by Kinetics$Genotype
+Kruskal-Wallis chi-squared = 5.3346, df = 2, p-value = 0.06944
+
+> kact_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison        Z    P.unadj     P.adj
+1 EPN - LVNV 0.323170 0.74656649 0.7465665
+2   EPN - WT 1.934205 0.05308792 0.1592638
+3  LVNV - WT 1.709164 0.08742065 0.1748413
+> Vinact_kruskal <- kruskal.test(Kinetics$V_inact ~ Kinetics$Genotype, data = Kinetics)
+> Vinact_dunn <- dunnTest(Kinetics$V_inact ~ Kinetics$Genotype, data = Kinetics)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> Vinact_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Kinetics$V_inact by Kinetics$Genotype
+Kruskal-Wallis chi-squared = 1.8052, df = 2, p-value = 0.4055
+
+> Vinact_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison          Z   P.unadj     P.adj
+1 EPN - LVNV -0.2524394 0.8007015 0.8007015
+2   EPN - WT  0.8733077 0.3824954 0.7649907
+3  LVNV - WT  1.2202996 0.2223513 0.6670539
+> kinact_kruskal <- kruskal.test(Kinetics$k_inact ~ Kinetics$Genotype, data = Kinetics)
+> kinact_dunn <- dunnTest(Kinetics$k_inact ~ Kinetics$Genotype, data = Kinetics)
+Warning message:
+Some rows deleted from 'x' and 'g' because missing data. 
+> kinact_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Kinetics$k_inact by Kinetics$Genotype
+Kruskal-Wallis chi-squared = 1.4302, df = 2, p-value = 0.4891
+
+> kinact_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z   P.unadj     P.adj
+1 EPN - LVNV 0.6645542 0.5063356 1.0000000
+2   EPN - WT 1.1915862 0.2334235 0.7002706
+3  LVNV - WT 0.4222456 0.6728458 0.6728458
+> #Dataset
+> Kinetics
+   Genotype   V_act_Eeq k_act_Eeq   V_inact   k_inact
+1        WT  -6.9297309  9.327197 -61.81095 10.553981
+2        WT -18.8917713  8.640065        NA        NA
+3        WT -12.6928113  7.169494 -55.89269  5.723735
+4        WT -13.6614763  5.903391 -56.23380  5.526814
+5        WT  -8.5089798  9.437858 -56.91393  5.298900
+6        WT  -9.1033550  4.030060        NA        NA
+7        WT  -2.4265809  8.760870        NA        NA
+8        WT -24.2957742  3.896160 -65.49775  9.041740
+9        WT -12.2351285  4.392087 -70.67166  6.582689
+10       WT  -8.1864457  8.138920 -64.87176  9.221333
+11       WT  -9.3991345  6.638290 -62.24211  9.020873
+12       WT -15.4644100  5.566789 -58.61141  5.738804
+13       WT -22.6862216  3.391409 -58.85928  7.261063
+14       WT -13.9541443  5.291204 -52.75404  6.595637
+15       WT   2.6277668  4.544290        NA        NA
+16       WT  -6.5622683  7.629585 -55.59874  5.847710
+17       WT  -3.8733569  7.218038 -52.88569  8.204719
+18       WT -21.6596915  8.393835        NA        NA
+19       WT -20.5469225  7.295670 -66.05219  8.048225
+20       WT -14.0588762  5.239852 -60.97263  6.448930
+21       WT          NA        NA -68.81612  8.646649
+22       WT  -4.1308758  8.397285        NA        NA
+23       WT  -7.9003059  5.028767 -52.29476 10.321226
+24       WT -10.0271281  6.820050 -63.34227  7.924370
+25       WT  -5.6909287  6.656614 -73.82938  9.405654
+26       WT  -5.1242070  8.985546 -80.63667  8.332096
+27       WT  -6.1047899  8.500105 -80.61831  8.322194
+28       WT -11.7051629  6.573440 -54.18012  8.982523
+29       WT -17.6740214  7.206982 -66.72168  8.473987
+30       WT   7.8106260  6.908277 -42.80077 10.736060
+31       WT          NA        NA -58.23558  6.282155
+32       WT   9.1807987 11.992522 -61.01827  5.986367
+33       WT          NA        NA -59.42846  7.771637
+34       WT  -7.1020194  8.917831 -52.51147  7.244837
+35       WT  -9.7120051  8.302356 -65.29409  6.741561
+36       WT  -4.2619948  7.923663 -53.88976  5.093508
+37       WT  -9.2547685  6.936065 -74.89260  6.870244
+38       WT  -6.2357998  8.064453 -65.77245  6.817730
+39       WT -13.1450535  7.432788 -59.59256 11.356479
+40       WT  -1.6449733  6.124531 -52.93359  7.048651
+41       WT          NA        NA -56.78464  6.107903
+42       WT  -5.8834355  7.144861 -56.85869  7.468219
+43       WT          NA        NA -53.86952  7.429405
+44       WT  -4.9286799  9.456244 -59.07829 10.173351
+45       WT -12.3577558  9.158432 -69.18019  7.602075
+46       WT          NA        NA -56.90933  7.006528
+47       WT          NA        NA -58.01356  6.712697
+48       WT          NA        NA -57.49797  7.044950
+49       WT  -6.6329005  6.141230 -55.51649  7.957731
+50       WT  -6.2528186  8.642452 -51.44691  6.952118
+51       WT  -9.7235364  7.243579 -63.62234  7.272733
+52       WT  -8.6991965  7.239117        NA        NA
+53       WT  -2.1116508  8.699712 -56.06070 10.492476
+54       WT  -6.8576552  6.826466 -57.28396  8.244608
+55       WT  -4.2658232  7.815720 -53.57968  5.963694
+56      EPN  -2.4870313  8.777423 -66.61218 11.839401
+57      EPN -12.2587042  9.000249 -59.59391  6.242962
+58      EPN -15.4698861  8.355641 -71.52987  8.922396
+59      EPN  -2.0309976  9.560034 -53.02593  8.468208
+60      EPN  -1.7058830  9.147889 -54.53553  7.288802
+61      EPN  -7.4913940 10.141107 -68.19417  2.032960
+62      EPN -12.9541429  6.468138 -50.13235  9.323271
+63      EPN  -6.5440604  6.730478 -57.38777  7.062127
+64      EPN  -6.5019090  7.829777        NA        NA
+65      EPN  -1.9071088  8.010383 -51.08490 10.860821
+66      EPN   0.2619352 10.437601 -76.92205  3.221970
+67      EPN -11.4093386  5.665497 -58.64458 12.108689
+68      EPN  -8.3311772  6.909243 -44.85657 14.501146
+69      EPN          NA        NA -60.33408 14.810700
+70      EPN          NA        NA -67.37978  9.399009
+71      EPN  -3.2633948  8.184531 -53.43682  4.910041
+72      EPN          NA        NA -53.19545  7.454855
+73      EPN          NA        NA -46.94072  7.209017
+74     LVNV  -2.8752135  8.158705 -51.70570  4.942689
+75     LVNV -10.4503920  7.653036 -57.38397  8.020844
+76     LVNV  -5.3464752  8.698722 -58.83640  6.174946
+77     LVNV -13.4076658  5.787584 -65.18164  6.442845
+78     LVNV  -5.7676012  8.692600 -68.74804  8.329747
+79     LVNV  -9.0950274  6.285547 -50.38934 11.456721
+80     LVNV -15.4959245  6.787513 -62.79813  6.518159
+81     LVNV  -5.3424976  8.364925 -59.24237  7.350763
+82     LVNV  -2.9993241  9.485880 -59.97194  7.030270
+83     LVNV  -9.0104549  7.913462 -53.81367 12.098751
+84     LVNV          NA        NA -59.09536 16.619885
+85     LVNV   6.3238219  8.610977 -63.25257  6.124331
+86     LVNV          NA        NA -56.76958 11.428902
+87     LVNV  -7.3450594  8.151546 -54.30152  9.866510
+88     LVNV  -8.8637759  5.783205 -57.78113  5.647714
+89     LVNV  -8.0810043  6.784750 -57.85147  6.626336
+90     LVNV          NA        NA -36.75318 12.513331
+91     LVNV  -6.3242865  7.958570 -46.16978  6.169433
+92     LVNV -11.6291466  9.576903        NA        NA
+93     LVNV   8.8030413 13.450247 -55.00910  7.832825
+94     LVNV  -2.9105846  9.575032        NA        NA
+> #Commands
+> #getwd()
+#Dependencies
+#install.packages("FSA")
+#install.packages("dunn.test")
+#library(FSA)
+#library(dunn.test)
+#Kinetics <- read.csv("Kinetics.csv", header = TRUE)
+#str(Kinetics)
+#dim(Kinetics)
+#table(Kinetics$Genotype)
+#Vact_kruskal <- kruskal.test(Kinetics$V_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+#Vact_dunn <- dunnTest(Kinetics$V_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+#Vact_kruskal
+#Vact_dunn
+#kact_kruskal <- kruskal.test(Kinetics$k_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+#kact_dunn <- dunnTest(Kinetics$k_act_Eeq ~ Kinetics$Genotype, data = Kinetics)
+#kact_kruskal
+#kact_dunn
+#Vinact_kruskal <- kruskal.test(Kinetics$V_inact ~ Kinetics$Genotype, data = Kinetics)
+#Vinact_dunn <- dunnTest(Kinetics$V_inact ~ Kinetics$Genotype, data = Kinetics)
+#Vinact_kruskal
+#Vinact_dunn
+#kinact_kruskal <- kruskal.test(Kinetics$k_inact ~ Kinetics$Genotype, data = Kinetics)
+#kinact_dunn <- dunnTest(Kinetics$k_inact ~ Kinetics$Genotype, data = Kinetics)
+#kinact_kruskal
+#kinact_dunn

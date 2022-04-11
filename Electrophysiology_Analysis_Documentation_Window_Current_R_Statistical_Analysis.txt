@@ -1,0 +1,172 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.70 (7543) x86_64-apple-darwin15.6.0]
+
+[Workspace restored from /Users/roberteugenedelcarlo/.RData]
+[History restored from /Users/roberteugenedelcarlo/.Rapp.history]
+
+> getwd()
+[1] "/Users/roberteugenedelcarlo/Desktop/IV_SSA_fSSI"
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> library(FSA)
+## FSA v0.8.30. See citation('FSA') if used in publication.
+## Run fishR() for related website and fishR('IFAR') for related book.
+Warning message:
+package ‘FSA’ was built under R version 3.5.2 
+> library(dunn.test)
+> Window <- read.csv("EmIWindow.csv", header = TRUE)
+> str(Window)
+'data.frame':	68 obs. of  3 variables:
+ $ Genotype             : Factor w/ 3 levels "EPN","LVNV","WT": 3 3 3 3 3 3 3 3 3 3 ...
+ $ E_at_I_window_peak   : num  -30.9 -36.7 -34.9 -39.5 -36.4 ...
+ $ I_window_max_fraction: num  0.0507 0.0336 0.0206 0.036 0.0384 ...
+> dim(Window)
+[1] 68  3
+> table(Window$Genotype)
+
+ EPN LVNV   WT 
+  13   16   39 
+> Em_kruskal <- kruskal.test(Window$E_at_I_window_peak ~ Window$Genotype, data = Window)
+> Em_dunn <- dunnTest(Window$E_at_I_window_peak ~ Window$Genotype, data = Window)
+> Em_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Window$E_at_I_window_peak by Window$Genotype
+Kruskal-Wallis chi-squared = 1.6093, df = 2, p-value = 0.4472
+
+> Em_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison          Z   P.unadj     P.adj
+1 EPN - LVNV  1.1753367 0.2398600 0.7195801
+2   EPN - WT  1.1215877 0.2620378 0.5240756
+3  LVNV - WT -0.2683463 0.7884328 0.7884328
+> Fraction_kruskal <- kruskal.test(Window$I_window_max_fraction ~ Window$Genotype, data = Window)
+> Fraction_dunn <- dunnTest(Window$I_window_max_fraction ~ Window$Genotype, data = Window)
+> Fraction_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  Window$I_window_max_fraction by Window$Genotype
+Kruskal-Wallis chi-squared = 2.5406, df = 2, p-value = 0.2808
+
+> Fraction_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison         Z   P.unadj     P.adj
+1 EPN - LVNV 0.3444583 0.7305017 0.7305017
+2   EPN - WT 1.4131060 0.1576246 0.4728737
+3  LVNV - WT 1.0911190 0.2752205 0.5504410
+> # Dataset
+> Window
+   Genotype E_at_I_window_peak I_window_max_fraction
+1        WT             -30.89           0.050676432
+2        WT             -36.67           0.033609252
+3        WT             -34.91           0.020601466
+4        WT             -39.49           0.035994235
+5        WT             -36.39           0.038385847
+6        WT             -35.15           0.004488217
+7        WT             -28.18           0.018416079
+8        WT             -31.81           0.033098451
+9        WT             -35.64           0.017872370
+10       WT             -34.99           0.035974112
+11       WT             -31.07           0.036036295
+12       WT             -33.30           0.021613895
+13       WT             -26.02           0.036476948
+14       WT             -40.91           0.042160499
+15       WT             -34.31           0.015710688
+16       WT             -23.13           0.055892950
+17       WT             -34.27           0.024901570
+18       WT             -33.60           0.013726504
+19       WT             -44.54           0.012981516
+20       WT             -42.64           0.010333783
+21       WT             -28.93           0.056667956
+22       WT             -26.52           0.008664061
+23       WT             -12.09           0.054156963
+24       WT             -34.55           0.011859590
+25       WT             -31.33           0.050940660
+26       WT             -39.35           0.020887903
+27       WT             -34.11           0.020150782
+28       WT             -41.66           0.007856167
+29       WT             -39.34           0.020248036
+30       WT             -30.39           0.070847940
+31       WT             -25.14           0.018992314
+32       WT             -29.98           0.026584631
+33       WT             -44.27           0.036342478
+34       WT             -28.68           0.033206387
+35       WT             -36.04           0.098265438
+36       WT             -40.25           0.038739749
+37       WT             -28.67           0.068436600
+38       WT             -29.62           0.033746209
+39       WT             -32.46           0.028125543
+40      EPN             -29.79           0.042724958
+41      EPN             -28.76           0.007138986
+42      EPN             -41.14           0.032034745
+43      EPN             -27.63           0.047488862
+44      EPN             -30.05           0.033672341
+45      EPN             -50.00           0.046536523
+46      EPN             -27.86           0.083931452
+47      EPN             -31.23           0.024053513
+48      EPN             -22.55           0.067527963
+49      EPN             -50.00           0.004157044
+50      EPN             -26.24           0.064393140
+51      EPN             -19.82           0.150941234
+52      EPN             -36.66           0.031790604
+53     LVNV             -32.59           0.020463280
+54     LVNV             -34.81           0.056680687
+55     LVNV             -36.59           0.026544722
+56     LVNV             -35.80           0.010337532
+57     LVNV             -38.70           0.026460211
+58     LVNV             -22.52           0.080781461
+59     LVNV             -40.48           0.031585394
+60     LVNV             -33.03           0.027513053
+61     LVNV             -38.36           0.044181393
+62     LVNV             -27.74           0.103842975
+63     LVNV             -35.65           0.010933919
+64     LVNV             -29.59           0.075481801
+65     LVNV             -33.56           0.013516724
+66     LVNV             -33.15           0.023495851
+67     LVNV             -30.83           0.076762442
+68     LVNV             -37.56           0.097306908
+> # Commands
+> #getwd()
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> #library(FSA)
+> #library(dunn.test)
+> #Window <- read.csv(“EmIWindow.csv", header = TRUE)
+> #str(Window)
+> #dim(Window)
+> #table(Window$Genotype)
+> #Em_kruskal <- kruskal.test(Window$E_at_I_window_peak ~ Window$Genotype, data = Window)
+> #Em_dunn <- dunnTest(Window$E_at_I_window_peak ~ Window$Genotype, data = Window)
+> #Em_kruskal
+> #Em_dunn
+> #Fraction_kruskal <- kruskal.test(Window$I_window_max_fraction ~ Window$Genotype, data = Window)
+> #Fraction_dunn <- dunnTest(Window$I_window_max_fraction ~ Window$Genotype, data = Window)
+> #Fraction_kruskal
+> #Fraction_dunn
+> 
