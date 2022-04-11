@@ -1,0 +1,64 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.70 (7543) x86_64-apple-darwin15.6.0]
+
+[Workspace restored from /Users/roberteugenedelcarlo/.RData]
+[History restored from /Users/roberteugenedelcarlo/.Rapp.history]
+
+> getwd()
+[1] "/Users/roberteugenedelcarlo/Desktop/Capacitance"
+> #Dependencies
+> #install.packages("FSA")
+> #install.packages("dunn.test")
+> library(FSA)
+## FSA v0.8.30. See citation('FSA') if used in publication.
+## Run fishR() for related website and fishR('IFAR') for related book.
+Warning message:
+package ‘FSA’ was built under R version 3.5.2 
+> library(dunn.test)
+> capac <- read.csv("capacitance_pF.csv", header = TRUE)
+> str(capac)
+'data.frame':	115 obs. of  2 variables:
+ $ Genotype      : Factor w/ 3 levels "EPN","LVNV","WT": 3 3 3 3 3 3 3 3 3 3 ...
+ $ Capacitance_pF: num  6.39 3.18 12.82 6.44 4.14 ...
+> dim(capac)
+[1] 115   2
+> table(capac$Genotype)
+
+ EPN LVNV   WT 
+  20   22   73 
+> capac_kruskal <- kruskal.test(capac$Capacitance_pF ~ capac$Genotype, data = capac)
+> capac_dunn <- dunnTest(capac$Capacitance_pF ~ capac$Genotype, data = capac)
+> capac_kruskal
+
+	Kruskal-Wallis rank sum test
+
+data:  capac$Capacitance_pF by capac$Genotype
+Kruskal-Wallis chi-squared = 0.089097, df = 2, p-value = 0.9564
+
+> capac_dunn
+Dunn (1964) Kruskal-Wallis multiple comparison
+  p-values adjusted with the Holm method.
+
+  Comparison          Z   P.unadj     P.adj
+1 EPN - LVNV  0.2938772 0.7688517 1.0000000
+2   EPN - WT  0.2285556 0.8192143 1.0000000
+3  LVNV - WT -0.1361404 0.8917103 0.8917103
+> 
