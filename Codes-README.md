@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Skeletal Muscle Force Analysis Code Suite
 
 ------------------------------------------------------------------------
