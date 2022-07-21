@@ -1,5 +1,10 @@
+# Code by Robert Eugene del Carlo, Ph.D.
+# This code processes a toxicological dose response assay of Tetrodotoxin on Skeletal Muscles dissected from Thamnophis garter snakes.
+# This code takes skeletal muscle contraction data, in .csv format, extracts the maximum value for each peak, and creates an average for the file.
+# The average twitch force of in each file is a proxy for the effect of the toxin at that concentration, from 0nM (control) up to as high as 120,000nM.
+#
 # P4C4PwithTTX - Data analysis
-#   Protocol 4: TTX Dose Response Curve
+#     Protocol 4: TTX Dose Response Curve
 #     1st stimulus occurs at 5s (seconds)
 #     System delay is 4ms (miliseconds)
 #     Pulsewidth is 500.0us (microseconds)
@@ -15,22 +20,30 @@
 #   The width of the curve from 10% to 90%
 #   The peak first derivative of that sigmoidal
 #
-# 8/15/18 - Fixed sMusMassg problem
-#
 library(reshape2)
-# Get Snake Info - Species, Genotype etc.
-sinf = read.csv("C:/Users/rdelcarlo/Desktop/data_r_script/SnakeInfo-09.30.2020.csv")
 
-# Get Snake Muscle Masses
-smm = read.csv("C:/Users/rdelcarlo/Desktop/data_r_script/SnakeSkeletalMuscleMasses-9.28.2020.csv")
+setwd("~/Desktop/R_del_carlo_R_Sample_Code/")
+
+# The dataframe containing information about individual snakes will be read in from the file named 'sinf' short for snake_info.
+# The data contained in this file are organized in columns of the following categories:
+# Snake/Species/Genotype/MAMU/County/Longitude/Latitude/SVLmm/BodMassg/Sex/Date_Experimented/Date_Collected/Days_in_Between/Rater_(M1)/Rater_(M2)/Rater_(M3)/Rater_(M4)/Rater_(M5)/Rater_(M6)/Rater_(M7)/Rater_(M8)/Rater_(M9)/Rater_(M10)/Rater_(M11)/Rater_(M12)/Rater_(M13)
+sinf = read.csv("SnakeInfo-09.30.2020.csv")
+
+# The dataframe containing the mass of the skeletal muscles used in this experiment will be read in from the file named 'smm' short for Snake_Muscle_Masses
+smm = read.csv("SnakeSkeletalMuscleMasses-9.28.2020.csv")
+# For experiments where a skeletal muscle mass is not recorded, apply a dummy value of 0.999 (grams)
 # reset all missing muscle mass values to -1.0smm
 smm[is.na(smm)] <- 0.999
 
-# dname = "C:/Bobby/Data-CSV/p4C4PwithTTX" "C:/Users/rdelcarlo/Desktop/Myography Data/Protocol 6 - Lidocaine" "C:/Users/rdelcarlo/Desktop/data_r_script/p4c4pwithTTX/p4c4pwithTTX"
-dname = "C:/Users/rdelcarlo/Desktop/data_r_script/p4c4pwithTTX/p4c4pwithTTX"
-#dname = "C:/Users/rdelcarlo/Downloads/Converted/Converted"
-#dname = "C:/Users/rdelcarlo/Desktop/data_r_script/p4c4pwithTTX/TestingTTX"
+# Specify the directory housing the input data, called dname short for directory_name.
+dname = "~/Desktop/R_del_carlo_R_Sample_Code/TTX"
+
 setwd(dname)
+
+# Create a directory for report outputs
+dir.create("./output/")
+# Create a directory for graphical outputs
+dir.create("./graphical_output/")
 
 x = strsplit(dname, "/")
 # Write / overwrite Column Headers for output summary file
@@ -81,8 +94,7 @@ ofFhdr <- c(
   "SVLmm",
   "MusMassg",
   "BodMassg",
-  "GENDER",
-  "EXTRACTION",
+  "Sex",
   "DATE_Experimented",
   "Date_Collected",
   "Days_In_Between",
@@ -91,7 +103,7 @@ ofFhdr <- c(
   "Muscle",
   "Dose(nM)",
   "Rater",
-  (1:1500) / 10000
+  format((1:1500) / 10000, scientific = FALSE)
 )
 write.table(
   t(ofFhdr),
@@ -118,8 +130,7 @@ ofF1dhdr <- c(
   "SVLmm",
   "MusMassg",
   "BodMassg",
-  "GENDER",
-  "EXTRACTION",
+  "Sex",
   "DATE_Experimented",
   "Date_Collected",
   "Days_In_Between",
@@ -128,7 +139,7 @@ ofF1dhdr <- c(
   "Muscle",
   "Dose(nM)",
   "Rater",
-  (1:29) / 200
+  format((1:29) / 200, scientific = FALSE)
 )
 write.table(
   t(ofF1dhdr),
@@ -143,12 +154,9 @@ write.table(
   col.names = FALSE
 )
 
-# get all data files
+# Identify all data files
 files = list.files(path = ".", pattern = "csv")
 q <- strsplit(files, "-")
-# snakes <- unlist(lapply(q,'[[',1))
-# muscles <- unlist(lapply(q,'[[',2))
-# osum <- data.frame(files,snakes,muscles)
 
 fTTX <- paste("./output/", "P4C4PwithTTXFiles",  ".csv", sep = "")
 write.table(
@@ -170,42 +178,44 @@ fnum <- 0
 for (file in files) {
   fnum <- fnum + 1
   y <- strsplit(file, "-")
+  # Define the SnakeID from the filename.
+  # Pull out the species information for the current snake.
   snake <- trimws(y[[1]][1])
+  # From the filename, parse out the muscle number (M#) describing which muscle was dissected from the current snake.
   muscle <- trimws(y[[1]][2])
+  # From the filename, parse out the dose of TTX (in nanomolar) and subsequently process it to retrieve a numerical value.
   dose <- trimws(y[[1]][3])
-  #dose <- sub("1.dat.csv", "", dose)
   dose <- sub(".dat.csv", "", dose)
   dose <- as.numeric(gsub("\\D", "", dose))
   dose <- (dose - 1) / 10
-  # snake <- as.character(osum$snakes[as.factor(file)])
-  # muscle <- as.character(osum$muscles[as.factor(file)])
-  # get Snake Info
+  # Using the SnakeID as a key, parsed from the filename, extract relevant information from the snake_info (sinf) and snake_muscle_mass (smm) dataframes.
   sSpecies <- as.character(sinf$Species[which(sinf$Snake == snake)])
-  sGenotype <-
-    as.character(sinf$Genotype[which(sinf$Snake == snake)])
+  # Pull out the sodium channel genotype information for the current snake.
+  sGenotype <- as.character(sinf$Genotype[which(sinf$Snake == snake)])
+  # Pull out the organism-level TTX resistance information for the current snake.
   sMAMU <- as.character(sinf$MAMU[which(sinf$Snake == snake)])
+  # Pull out the county sampling information for the current snake.
   sCounty <- as.character(sinf$COUNTY[which(sinf$Snake == snake)])
+  # Pull out the Longitudinal information for the current snake.
   sLong <- as.character(sinf$LONGITUDE[which(sinf$Snake == snake)])
+  # Pull out the Latitudinal information for the current snake.
   sLat <- as.character(sinf$LATITUDE[which(sinf$Snake == snake)])
+  # Pull out the Snout-Vent Length information for the current snake.
   sSVLmm <- as.character(sinf$SVLmm[which(sinf$Snake == snake)])
-  # sMusMassg <-
-  #  as.character(sinf$MusMassg[which(sinf$Snake == snake)])
-  sBodMassg <-
-    as.character(sinf$BodMassg[which(sinf$Snake == snake)])
-  sGender <- as.character(sinf$GENDER[which(sinf$Snake == snake)])
-  sExtraction <-
-    as.character(sinf$EXTRACTION[which(sinf$Snake == snake)])
-  sDtExp <-
-    as.character(sinf$DATE.Experimented[which(sinf$Snake == snake)])
-  sDtColl <-
-    as.character(sinf$Date.Collected[which(sinf$Snake == snake)])
-  sDInBet <-
-    as.character(sinf$Days.in.Between[which(sinf$Snake == snake)])
-  # Get Muscle Mass
+  # Pull out the Organismal Body Mass information for the current snake.
+  sBodMassg <- as.character(sinf$BodMassg[which(sinf$Snake == snake)])
+  # Pull out the gential sex information for the current snake.
+  sSex <- as.character(sinf$Sex[which(sinf$Snake == snake)])
+  # Pull out the date of the experiment for the current snake.
+  sDtExp <- as.character(sinf$DATE.Experimented[which(sinf$Snake == snake)])
+  # Pull out the sampling date for the current snake.
+  sDtColl <- as.character(sinf$Date.Collected[which(sinf$Snake == snake)])
+  # Pull out the days in captivity information for the current snake.
+  sDInBet <- as.character(sinf$Days.in.Between[which(sinf$Snake == snake)])
+  # Get the mass of the current muscle
   muscMass <- smm[which(smm$SnakeID == snake), muscle] / 1000
   sMusMassg <- muscMass
-  # print(snake, muscle, muscMass)
-  # Get Rater from Snake Info file for snake/musc combo
+  # Get Rater from Snake Info file for the current snake and current muscle
   rater <- as.character(sinf[which(sinf$Snake==snake), paste0("Rater..", muscle, ".")])
 
   write.table(
@@ -229,7 +239,7 @@ for (file in files) {
     cat("File: ", file, "; Stim Rows: ", length(stmRows), "\n")
     next
   }
-  # find last time for each pulse
+  # Find the last value of each stimulus pulse to establish the beginning of the contraction.
   categories <- cutree(hclust(dist(stmRows)), k = 4)
   stmRows <- aggregate(stmRows, list(cats = categories), "max")[, 2]
   if (length(stmRows) < 4) {
@@ -237,7 +247,7 @@ for (file in files) {
     next
   }
   
-  # extract force-baseline for 1500 pts after end of stimulus;
+  # Define the mean baseline force prior to the stimulus onset
   i <- 0
   for (sr in stmRows) {
     i <- i + 1
@@ -254,8 +264,7 @@ for (file in files) {
       sSVLmm,
       sMusMassg,
       sBodMassg,
-      sGender,
-      sExtraction,
+      sSex,
       sDtExp,
       sDtColl,
       sDInBet,
@@ -278,7 +287,7 @@ for (file in files) {
       row.names = FALSE,
       col.names = FALSE
     )
-    #  Low pass 200Hz filter -> pick every 30th entry
+    #  Low pass 200Hz filter -> pick every 30th entry; for computational expediency provided minimal graphing.
     rspF1d <- diff(rspF[1:30 * 50]) * 200
     oF1dline <- c(
       sSpecies,
@@ -290,8 +299,7 @@ for (file in files) {
       sSVLmm,
       sMusMassg,
       sBodMassg,
-      sGender,
-      sExtraction,
+      sSex,
       sDtExp,
       sDtColl,
       sDInBet,
@@ -318,8 +326,7 @@ for (file in files) {
     t100p <- min(which(rspF >= maxF))
     # convert all times to ms from tenth of a ms
     t10p <- min(which(rspF > 0.1 * maxF))
-    t50p <-
-      t100p + min(which(rspF[t100p:length(rspF)] <= 0.5 * maxF))
+    t50p <- t100p + min(which(rspF[t100p:length(rspF)] <= 0.5 * maxF))
     maxF1d <- max(rspF1d)
     minF1d <- min(rspF1d)
     t1dmax <- min(which(rspF1d >= maxF1d)) * 30
@@ -361,15 +368,11 @@ for (file in files) {
 }
 
 df = read.csv("./output/p4C4PTTX-force.csv")
-# soff <- off[order(off$Pulse,off$Snake.Muscle),]
-# toff <- t(soff)
-# write.csv(toff, "./output/p4C4PTTX-force-rpt.csv")
-write.csv(t(df[order(df$Pulse, df$Snake, df$Muscle, df$Dose), ]),
-          "./output/p4C4PTTX-force-rpt.csv")
+
+write.csv(t(df[order(df$Pulse, df$Snake, df$Muscle, df$Dose), ]), "./output/p4C4PTTX-force-rpt.csv")
 
 df = read.csv("./output/p4C4PTTX-force1d.csv")
-write.csv(t(df[order(df$Pulse, df$Snake, df$Muscle, df$Dose), ]),
-          "./output/p4C4PTTX-force1d-rpt.csv")
+write.csv(t(df[order(df$Pulse, df$Snake, df$Muscle, df$Dose), ]), "./output/p4C4PTTX-force1d-rpt.csv")
 
 df = read.csv(ofsum)
 agg <-
@@ -402,6 +405,5 @@ for (var in names(a1_cast)) {
   write.csv(a1_cast[[var]], paste0("./output/p4C4PwithTTX-", var, ".csv"))
 }
 
-# plot(rspF)
-# plot(rspF1d,type="l")
-# scatter.smooth(x=1:29, y=rspF1d)
+# Open the most important summary file from the analysis for quality control checking by hand.
+system('open ./p4C4PwithTTX-ContrAmpl.N.g..csv')
